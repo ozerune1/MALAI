@@ -104,4 +104,4 @@ with gr.Blocks() as demo:
    query.submit(fn=MALAI, inputs=[query, provider, model], outputs=output, api_name="send")
 
 if __name__ == "__main__":
-   demo.launch()
+   demo.launch(share=True)

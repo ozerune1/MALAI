@@ -1,4 +1,4 @@
-azure_storage==0.37.0
+azure-storage-blob
 boto3==1.39.2
 gradio==5.35.0
 langchain==0.3.26
