@@ -19,7 +19,7 @@ from langchain.agents import create_react_agent, AgentExecutor
 from dotenv import load_dotenv
 from api import refresh_access_token, search_anime, anime_details, ranked_anime, seasonal_anime, get_user_anime_list, update_anime_list, delete_anime_from_list, user_details, search_manga, manga_details, ranked_manga, get_user_manga_list, update_manga_list, delete_manga_from_list, get_forum_boards, get_forum_topics, read_forum_topic
 
-def MALAI(query, provider, model):
+def MALAI(query, provider, model, hf_model):
 
     load_dotenv()
 
@@ -31,6 +31,7 @@ def MALAI(query, provider, model):
 
     if provider == "Groq":
         GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+        print(GROQ_API_KEY, model)
         llm = ChatGroq(
             model=model
         )    

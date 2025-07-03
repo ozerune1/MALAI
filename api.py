@@ -6,29 +6,33 @@ from langchain_core.tools import tool
 
 load_dotenv()
 
-access_token = os.getenv("access_token")
-refresh_token = os.getenv("refresh_token")
-client_id = os.getenv("client_id")
-client_secret = os.getenv("client_secret")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 @tool
-def refresh_access_token(a="None"):
+def refresh_ACCESS_TOKEN(a="None"):
     '''
     Refreshes the access token for MyAnimeList. Use this if you get a 401 error when using the API, then retry the previous API call. The Action Input should be the word None.
     '''
+    load_dotenv(override=True)
+
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+
     api_url = "https://myanimelist.net/v1/oauth2/token"
 
     params = {
-        "client_id": client_id,
-        "client_secret": client_secret,
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
         "grant_type": "refresh_token",
-        "refresh_token": refresh_token
+        "refresh_token": REFRESH_TOKEN
     }
 
     response = requests.post(api_url, data=params).json()
 
-    set_key(".env", "access_token", response['access_token'])
-    set_key(".env", "refresh_token", response['refresh_token'])
+    set_key(".env", "ACCESS_TOKEN", response['access_token'])
+    set_key(".env", "REFRESH_TOKEN", response['refresh_token'])
 
     return "Success!"
 
@@ -43,12 +47,12 @@ def search_anime(anime_name):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = "https://api.myanimelist.net/v2/anime"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -68,14 +72,14 @@ def anime_details(values):
 
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     id, fields = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/anime/{id}"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -98,14 +102,14 @@ def ranked_anime(values):
 
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     limit, offset, field = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/anime/ranking"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -129,13 +133,13 @@ def seasonal_anime(values):
 
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     year, season, sort, limit, offset = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/anime/season/{year}/{season}"
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -158,7 +162,7 @@ def get_user_anime_list(values):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     user, status, sort, limit, offset = values.split("|")
     if status == "all":
@@ -166,7 +170,7 @@ def get_user_anime_list(values):
 
     api_url = f"https://api.myanimelist.net/v2/users/{user}/animelist"
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -191,13 +195,13 @@ def update_anime_list(values):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     id, status, is_rewatching, score, num_watched_episodes, num_times_rewatched = values.split("|")
 
     api_url = f"https://api.myanimelist.net/v2/anime/{id}/my_list_status"
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -217,12 +221,12 @@ def delete_anime_from_list(id):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = f"https://api.myanimelist.net/v2/anime/{id}/my_list_status"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -240,12 +244,12 @@ def user_details(fields):
 
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = f"https://api.myanimelist.net/v2/users/@me"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -265,12 +269,12 @@ def search_manga(manga_name):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = "https://api.myanimelist.net/v2/manga"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -290,14 +294,14 @@ def manga_details(values):
 
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     id, fields = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/manga/{id}"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -320,14 +324,14 @@ def ranked_manga(values):
 
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     limit, offset, field = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/manga/ranking"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -350,7 +354,7 @@ def get_user_manga_list(values):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     user, status, sort, limit, offset = values.split("|")
     if status == "all":
@@ -358,7 +362,7 @@ def get_user_manga_list(values):
 
     api_url = f"https://api.myanimelist.net/v2/users/{user}/mangalist"
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -384,13 +388,13 @@ def update_manga_list(values):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     id, status, is_rereading, score, num_volumes_read, num_chapters_read, num_times_reread = values.split("|")
 
     api_url = f"https://api.myanimelist.net/v2/manga/{id}/my_list_status"
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -411,12 +415,12 @@ def delete_manga_from_list(id):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = f"https://api.myanimelist.net/v2/manga/{id}/my_list_status"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -432,14 +436,14 @@ def get_forum_boards(values):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = f"https://api.myanimelist.net/v2/forum/boards"
 
     values = None
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     return json.dumps(requests.get(api_url, headers=headers).json())
@@ -454,7 +458,7 @@ def get_forum_topics(values):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = f"https://api.myanimelist.net/v2/forum/topics"
 
@@ -468,7 +472,7 @@ def get_forum_topics(values):
         q = None
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {
@@ -487,12 +491,12 @@ def read_forum_topic(id):
     '''
     load_dotenv(override=True)
 
-    access_token = os.getenv("access_token")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
     api_url = f"https://api.myanimelist.net/v2/forum/topic/{id}"
 
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     params = {

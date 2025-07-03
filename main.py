@@ -98,10 +98,8 @@ with gr.Blocks() as demo:
       outputs=[model, hf_model]
    )
 
-   model=hf_model
-
-   send.click(fn=MALAI, inputs=[query, provider, model], outputs=output, api_name="send")
-   query.submit(fn=MALAI, inputs=[query, provider, model], outputs=output, api_name="send")
+   send.click(fn=MALAI, inputs=[query, provider, model, hf_model], outputs=output, api_name="send")
+   query.submit(fn=MALAI, inputs=[query, provider, model, hf_model], outputs=output, api_name="send")
 
 if __name__ == "__main__":
    demo.launch(share=True)
