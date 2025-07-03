@@ -31,7 +31,6 @@ def MALAI(query, provider, model, hf_model):
 
     if provider == "Groq":
         GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-        print(GROQ_API_KEY, model)
         llm = ChatGroq(
             model=model
         )    
