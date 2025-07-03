@@ -3,6 +3,7 @@ from dotenv import load_dotenv, set_key
 import requests
 import json
 from langchain_core.tools import tool
+from codespaces_secrets import update_secret
 
 load_dotenv()
 
@@ -12,7 +13,7 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 @tool
-def refresh_ACCESS_TOKEN(a="None"):
+def refresh_access_token(a="None"):
     '''
     Refreshes the access token for MyAnimeList. Use this if you get a 401 error when using the API, then retry the previous API call. The Action Input should be the word None.
     '''
@@ -31,8 +32,16 @@ def refresh_ACCESS_TOKEN(a="None"):
 
     response = requests.post(api_url, data=params).json()
 
-    set_key(".env", "ACCESS_TOKEN", response['access_token'])
-    set_key(".env", "REFRESH_TOKEN", response['refresh_token'])
+    os.environ["ACCESS_TOKEN"] = response['access_token']
+    os.environ["REFRESH_TOKEN"] = response['refresh_token']
+
+    if os.path.exists(".env"):
+        set_key(".env", "ACCESS_TOKEN", response['access_token'])
+        set_key(".env", "REFRESH_TOKEN", response['refresh_token'])
+    
+    if os.getenv("GH_TOKEN"):
+        update_secret("ACCESS_TOKEN", response['access_token'])
+        update_secret("REFRESH_TOKEN", response['refresh_token'])
 
     return "Success!"
 
