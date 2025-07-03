@@ -111,16 +111,16 @@ def MALAI(query, provider, model):
 
     if provider == "HuggingFace Local":
         quant_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4"
-    )
-    llm = HuggingFacePipeline.from_model_id(
-        model_id="google/gemma-3-4b-it",
-        task="text-generation",
-        model_kwargs={
-            "quantization_config": quant_config
-        }
-    )
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4"
+        )
+        llm = HuggingFacePipeline.from_model_id(
+            model_id=model,
+            task="text-generation",
+            model_kwargs={
+                "quantization_config": quant_config
+            }
+        )
 
     prompt = hub.pull("hwchase17/react")
     tools = [refresh_access_token, search_anime, anime_details, ranked_anime, seasonal_anime, get_user_anime_list, update_anime_list, delete_anime_from_list, user_details, search_manga, manga_details, ranked_manga, get_user_manga_list, update_manga_list, delete_manga_from_list, get_forum_boards, get_forum_topics, read_forum_topic]
