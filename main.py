@@ -8,16 +8,16 @@ load_dotenv()
 
 providers = []
 
-if os.getenv("OLLAMA_HOST") != "":
+if os.getenv("OLLAMA_HOST"):
    providers.append("Ollama")
 
-if os.getenv("GROQ_API_KEY") != "":
+if os.getenv("GROQ_API_KEY"):
    providers.append("Groq")
 
-if os.getenv("GEMINI_API_KEY") != "":
+if os.getenv("GEMINI_API_KEY"):
    providers.append("Gemini")
 
-if os.getenv("vertex-creds.json") != "":
+if os.getenv("vertex-creds.json"):
    if len(vertex_models) > 0:
       providers.append("Vertex")
    if len(vertex_anthropic_models) > 0:
@@ -28,20 +28,20 @@ if os.getenv("vertex-creds.json") != "":
       providers.append("Vertex Mistral")
    if len(vertex_gemma_models) > 0:
       providers.append("Vertex Gemma")
-if os.getenv("AZURE_OPENAI_ENDPOINT") != "":
+if os.getenv("AZURE_OPENAI_ENDPOINT"):
    providers.append("Azure OpenAI")
-if os.getenv("AZURE_INFERENCE_ENDPOINT") != "":
+if os.getenv("AZURE_INFERENCE_ENDPOINT"):
    providers.append("Azure")
-if os.getenv("AWS_ACCESS_KEY_ID") != "":
+if os.getenv("AWS_ACCESS_KEY_ID"):
    providers.append("AWS On Demand")
    providers.append("AWS Inference")
-if os.getenv("OPENAI_API_KEY") != "":
+if os.getenv("OPENAI_API_KEY"):
    providers.append("OpenAI")
-if os.getenv("ANTHROPIC_API_KEY") != "":
+if os.getenv("ANTHROPIC_API_KEY"):
    providers.append("Anthropic")
-if os.getenv("MISTRAL_API_KEY") != "":
+if os.getenv("MISTRAL_API_KEY"):
    providers.append("Mistral")
-if os.getenv("HUGGINGFACEHUB_API_TOKEN") != "":
+if os.getenv("HUGGINGFACEHUB_API_TOKEN"):
    providers.append("HuggingFace Endpoints")
    providers.append("HuggingFace Local")
 
@@ -104,4 +104,4 @@ with gr.Blocks() as demo:
    query.submit(fn=MALAI, inputs=[query, provider, model], outputs=output, api_name="send")
 
 if __name__ == "__main__":
-   demo.launch()
+   demo.launch(share=True)
