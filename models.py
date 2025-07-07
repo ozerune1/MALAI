@@ -203,7 +203,8 @@ def mistral_models():
     models = []
 
     for model in response["data"]:
-        models.append(model["name"])
+        if model["name"] not in models:
+            models.append(model["name"])
 
     models.sort()
 
