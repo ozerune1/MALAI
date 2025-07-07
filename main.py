@@ -37,7 +37,7 @@ except Exception as e:
    print(e)
 if os.getenv("AZURE_OPENAI_ENDPOINT"):
    providers.append("Azure OpenAI")
-if os.getenv("AZURE_INFERENCE_ENDPOINT"):
+if os.getenv("AZURE_FOUNDRY_ENDPOINT"):
    providers.append("Azure")
 if os.getenv("AWS_ACCESS_KEY_ID"):
    providers.append("AWS On Demand")

@@ -74,8 +74,8 @@ def MALAI(query, provider, model, hf_model):
 
     if provider == "Azure":
         llm = AzureAIChatCompletionsModel(
-        endpoint=os.getenv("AZURE_INFERENCE_ENDPOINT"),
-        credential=os.getenv("AZURE_INFERENCE_CREDENTIAL"),
+        endpoint=os.getenv("AZURE_FOUNDRY_ENDPOINT"),
+        credential=os.getenv("AZURE_FOUNDRY_API_KEY"),
         model=model,
         api_version="2024-05-01-preview"
     )

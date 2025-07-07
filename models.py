@@ -106,13 +106,14 @@ def azure_models():
 
     catalogue = client.accounts.list_models(
         resource_group_name=os.getenv("AZURE_RESOURCE_GROUP_NAME"),
-        account_name = os.getenv("AZURE_AI_STUDIO_PROJECT_NAME")
+        account_name = os.getenv("AZURE_FOUNDRY_PROJECT_NAME")
     )
 
     models = []
 
     for model in catalogue:
-        models.append(model.name)
+        if model.name not in models:
+            models.append(model.name)
 
     models.sort()
 
