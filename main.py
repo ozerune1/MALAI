@@ -1,4 +1,5 @@
 import os
+import google.auth
 from dotenv import load_dotenv
 import gradio as gr
 from brain import MALAI
@@ -17,8 +18,12 @@ if os.getenv("GROQ_API_KEY"):
 if os.getenv("GEMINI_API_KEY"):
    providers.append("Gemini")
 
-if os.getenv("vertex-creds.json"):
+try:
+   print("Attempting Vertex init...")
+   credentials, project = google.auth.default()
+   print(project)
    if len(vertex_models) > 0:
+      print("Added Vertex")
       providers.append("Vertex")
    if len(vertex_anthropic_models) > 0:
       providers.append("Vertex Anthropic")
@@ -28,6 +33,8 @@ if os.getenv("vertex-creds.json"):
       providers.append("Vertex Mistral")
    if len(vertex_gemma_models) > 0:
       providers.append("Vertex Gemma")
+except Exception as e:
+   print(e)
 if os.getenv("AZURE_OPENAI_ENDPOINT"):
    providers.append("Azure OpenAI")
 if os.getenv("AZURE_INFERENCE_ENDPOINT"):
