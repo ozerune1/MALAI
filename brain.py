@@ -14,6 +14,7 @@ from langchain_aws import ChatBedrockConverse
 from langchain_anthropic import ChatAnthropic
 from langchain_mistralai import ChatMistralAI
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint, HuggingFacePipeline
+from langchain_fireworks import ChatFireworks
 from transformers import BitsAndBytesConfig
 from langchain.agents import create_react_agent, AgentExecutor
 from dotenv import load_dotenv
@@ -30,7 +31,6 @@ def MALAI(query, provider, model, hf_model):
         ) 
 
     if provider == "Groq":
-        GROQ_API_KEY = os.getenv("GROQ_API_KEY")
         llm = ChatGroq(
             model=model
         )    
@@ -120,6 +120,11 @@ def MALAI(query, provider, model, hf_model):
             model_kwargs={
                 "quantization_config": quant_config
             }
+        )
+    
+    if provider == "Fireworks":
+        llm = ChatFireworks(
+            model=model
         )
 
     prompt = hub.pull("hwchase17/react")
