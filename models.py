@@ -119,7 +119,7 @@ def azure_models():
 
     return models
 
-def aws_demand_models():
+def aws_models():
     load_dotenv()
 
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
@@ -133,28 +133,16 @@ def aws_demand_models():
     models = []
 
     for model in model_summaries:
-        if model.get("inferenceTypesSupported") == ['ON_DEMAND']:
+        if model.get("inferenceTypesSupported") == ['ON_DEMAND'] and model.get("modelId") not in models:
             models.append(model.get("modelId"))
-        
-    models.sort()
 
-    return models
-
-def aws_inference_models():
-    load_dotenv()
-
-    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-    AWS_REGION = os.getenv("AWS_REGION")
-
-    bedrock_client = boto3.client("bedrock", region_name=AWS_REGION)
     response = bedrock_client.list_inference_profiles()
     model_summaries = response.get("inferenceProfileSummaries", [])
 
-    models = []
-
     for model in model_summaries:
-        models.append(model.get("inferenceProfileId"))
+        name = model.get("inferenceProfileId")
+        if name not in models:
+            models.append(name)
         
     models.sort()
 

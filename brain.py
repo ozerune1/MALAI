@@ -80,7 +80,7 @@ def MALAI(query, provider, model, hf_model):
         api_version="2024-05-01-preview"
     )
         
-    if provider == "AWS On Demand" or provider == "AWS Inference":
+    if provider == "AWS":
         llm = ChatBedrockConverse(
             model_id=model
         )

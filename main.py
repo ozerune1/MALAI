@@ -3,7 +3,7 @@ import google.auth
 from dotenv import load_dotenv
 import gradio as gr
 from brain import MALAI
-from models import groq_models, ollama_models, gemini_models, vertex_models, vertex_anthropic_models, vertex_llama_models, vertex_mistral_models, vertex_gemma_models, azure_openai_models, azure_models, aws_demand_models, aws_inference_models, openai_models, anthropic_models, mistral_models
+from models import groq_models, ollama_models, gemini_models, vertex_models, vertex_anthropic_models, vertex_llama_models, vertex_mistral_models, vertex_gemma_models, azure_openai_models, azure_models, aws_models, openai_models, anthropic_models, mistral_models
 
 load_dotenv()
 
@@ -19,9 +19,7 @@ if os.getenv("GEMINI_API_KEY"):
    providers.append("Gemini")
 
 try:
-   print("Attempting Vertex init...")
    credentials, project = google.auth.default()
-   print(project)
    if len(vertex_models) > 0:
       print("Added Vertex")
       providers.append("Vertex")
@@ -40,8 +38,7 @@ if os.getenv("AZURE_OPENAI_ENDPOINT"):
 if os.getenv("AZURE_FOUNDRY_ENDPOINT"):
    providers.append("Azure")
 if os.getenv("AWS_ACCESS_KEY_ID"):
-   providers.append("AWS On Demand")
-   providers.append("AWS Inference")
+   providers.append("AWS")
 if os.getenv("OPENAI_API_KEY"):
    providers.append("OpenAI")
 if os.getenv("ANTHROPIC_API_KEY"):
@@ -75,10 +72,8 @@ def update_models(provider):
       return gr.Dropdown(choices=azure_openai_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False)
    elif provider == "Azure":
       return gr.Dropdown(choices=azure_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False)
-   elif provider == "AWS On Demand":
-      return gr.Dropdown(choices=aws_demand_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False)
-   elif provider == "AWS Inference":
-      return gr.Dropdown(choices=aws_inference_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False)
+   elif provider == "AWS":
+      return gr.Dropdown(choices=aws_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False)
    elif provider == "OpenAI":
       return gr.Dropdown(choices=openai_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False)
    elif provider == "Anthropic":
@@ -90,7 +85,7 @@ def update_models(provider):
    elif provider == "HuggingFace Local":
       return gr.Dropdown([], value=None, interactive=False, visible=False), gr.Textbox(label="Model", visible=True, interactive=True)
 
-with gr.Blocks() as demo:
+with gr.Blocks(theme=gr.themes.Base()) as demo:
    with gr.Row():
       provider = gr.Dropdown(providers, label="Provider", value=None)
       model = gr.Dropdown([], label="Model", interactive=False)
