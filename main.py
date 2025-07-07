@@ -3,7 +3,7 @@ import google.auth
 from dotenv import load_dotenv
 import gradio as gr
 from brain import MALAI
-from models import groq_models, ollama_models, gemini_models, vertex_models, vertex_anthropic_models, vertex_llama_models, vertex_mistral_models, vertex_gemma_models, azure_openai_models, azure_models, aws_models, openai_models, anthropic_models, mistral_models, fireworks_models
+from models import groq_models, ollama_models, gemini_models, vertex_models, vertex_anthropic_models, vertex_llama_models, vertex_mistral_models, vertex_gemma_models, azure_openai_models, azure_models, aws_models, openai_models, anthropic_models, mistral_models
 
 load_dotenv()
 
@@ -48,8 +48,6 @@ if os.getenv("MISTRAL_API_KEY"):
 if os.getenv("HUGGINGFACEHUB_API_TOKEN"):
    providers.append("HuggingFace Endpoints")
    providers.append("HuggingFace Local")
-if os.getenv("FIREWORKS_API_KEY"):
-   providers.append("Fireworks")
 
 providers.sort()
 
@@ -86,8 +84,6 @@ def update_models(provider):
       return gr.Dropdown([], value=None, interactive=False, visible=False), gr.Textbox(label="Model", visible=True, interactive=True)
    elif provider == "HuggingFace Local":
       return gr.Dropdown([], value=None, interactive=False, visible=False), gr.Textbox(label="Model", visible=True, interactive=True)
-   elif provider == "Fireworks":
-      return gr.Dropdown(choices=fireworks_models(), value=None, interactive=True, visible=True), gr.Textbox(label="Model", visible=False, interactive=False)
 
 with gr.Blocks(theme=gr.themes.Base()) as demo:
    with gr.Row():

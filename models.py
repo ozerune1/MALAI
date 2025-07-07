@@ -5,7 +5,6 @@ import requests
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.cognitiveservices import CognitiveServicesManagementClient
 import boto3
-from openai import OpenAI
 
 def groq_models():
     load_dotenv()
@@ -209,20 +208,4 @@ def mistral_models():
 
     models.sort()
 
-    return models
-
-def fireworks_models():
-    client = OpenAI(
-        base_url="https://api.fireworks.ai/inference/v1",
-        api_key=os.environ.get("FIREWORKS_API_KEY")
-    )
-
-    response = client.models.list()
-
-    models = []
-
-    for model in response.data:
-        models.append(model.id)
-
-    models.sort()
     return models
