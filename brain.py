@@ -100,9 +100,9 @@ def MALAI(query, provider, model, hf_model):
             model=model
         )
 
-    if provider == "HuggingFace Endpoint":
+    if provider == "HuggingFace Endpoints":
         endpoint = HuggingFaceEndpoint(
-            repo_id=model
+            repo_id=hf_model
         )
 
         llm = ChatHuggingFace(
@@ -115,7 +115,7 @@ def MALAI(query, provider, model, hf_model):
             bnb_4bit_quant_type="nf4"
         )
         llm = HuggingFacePipeline.from_model_id(
-            model_id=model,
+            model_id=hf_model,
             task="text-generation",
             model_kwargs={
                 "quantization_config": quant_config
