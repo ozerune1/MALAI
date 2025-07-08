@@ -18,10 +18,20 @@ from transformers import BitsAndBytesConfig
 from langchain.agents import create_react_agent, AgentExecutor
 from dotenv import load_dotenv
 from api import refresh_access_token, search_anime, anime_details, ranked_anime, seasonal_anime, get_user_anime_list, update_anime_list, delete_anime_from_list, user_details, search_manga, manga_details, ranked_manga, get_user_manga_list, update_manga_list, delete_manga_from_list, get_forum_boards, get_forum_topics, read_forum_topic
+from langfuse import Langfuse
+from langfuse.langchain import CallbackHandler
 
 def MALAI(query, provider, model, hf_model):
 
     load_dotenv()
+
+    langfuse = Langfuse(
+        secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+        public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+        host=os.getenv("LANGFUSE_HOST")
+    )
+
+    langfuse_handler = CallbackHandler()
 
     if provider == "Ollama":
         llm = ChatOllama(
@@ -128,8 +138,6 @@ def MALAI(query, provider, model, hf_model):
     agent = create_react_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=False)
 
-    response = agent_executor.invoke({
-        "input": query
-    })
+    response = agent_executor.invoke({"input": query}, config={"callbacks": [langfuse_handler]})
 
     return response["output"]
