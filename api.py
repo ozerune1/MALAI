@@ -71,19 +71,18 @@ def search_anime(anime_name: str) -> str:
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 @tool
-def anime_details(values):
+def anime_details(id: int, fields: str) -> str:
     '''
-    Provides details on the anime from MyAnimeList using an integer ID. PRIMARY AUTHENTICATED USER ONLY (@me)!!!: my_list_status field, if and only if it is on the user's list, contains watching status, individual score, episodes watched, if they're rewatching, and time updated. All values required. This field will only ever get you MY details, so never ever use it to find anyone else's information.
-    Use search_anime to find this ID.
-    There should be 2 inputs separated by a |. One is the id in numerical form. This is followed by a comma separated list of fields to return, without spaces between commas.
+    Provides details on the anime from MyAnimeList using an integer ID. 
+    PRIMARY AUTHENTICATED USER ONLY (@me)!!!: my_list_status field, if and only if it is on the user's list, contains watching status, individual score, episodes watched, if they're rewatching, and time updated. All values required. This field will only ever get you MY details, so never ever use it to find anyone else's information.
+    Use search_anime to find the ID.
+    fields: comma separated list of fields to return, without spaces between commas.
     Possible fields are: id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics
     '''
 
     load_dotenv(override=True)
 
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-
-    id, fields = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/anime/{id}"
 
@@ -515,4 +514,4 @@ def read_forum_topic(id):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 token_tools = [refresh_access_token]
-anime_tools = [search_anime]
+anime_tools = [search_anime, anime_details]
