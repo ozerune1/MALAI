@@ -98,7 +98,7 @@ def anime_details(id: int, fields: str) -> str:
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 @tool
-def ranked_anime(limit: int, offset: int, field: str):
+def ranked_anime(limit: int, offset: int, field: str) -> str:
     '''
     Searches anime by ranking.
     limit: Number of results to return. Make this as small as possible to get the necessary information.
@@ -128,7 +128,7 @@ def ranked_anime(limit: int, offset: int, field: str):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 @tool
-def seasonal_anime(year: int, season: str, sort: str, limit: int, offset: int):
+def seasonal_anime(year: int, season: str, sort: str, limit: int, offset: int) -> str:
     '''
     Gets seasonal anime from MyAnimelist.
     year: example: 2025
@@ -156,22 +156,18 @@ def seasonal_anime(year: int, season: str, sort: str, limit: int, offset: int):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 @tool
-def get_user_anime_list(values):
+def get_user_anime_list(user: str, status: str | None, sort: str, limit: int, offset: int) -> str:
     '''
     Gets a user's anime list from MyAnimelist, which includes information about what the user has seen. Does not include scores, but can be sorted by score. The top result by score should be considered the favorite. No need to verify scores. Do not use to look for individual entries. Values should be given separated by a |.
-    Username: Use @me for the main user's list
-    Status: all, watching, completed, on_hold, dropped, plan_to_watch
-    Sort: list_score (descending), list_updated_at (descending), anime_title (ascending), anime_start_date (descending)
-    Limit: Number of results to return. Keep this as low as possible.
-    Offset: integer representing the number away from the top. 0 will be the top of the list.
+    user: Use @me for the main user's list
+    status: None for all, or watching, completed, on_hold, dropped, plan_to_watch
+    sort: list_score (descending), list_updated_at (descending), anime_title (ascending), anime_start_date (descending)
+    limit: Number of results to return. Keep this as low as possible.
+    offset: number away from the top. 0 will be the top of the list.
     '''
     load_dotenv(override=True)
 
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-
-    user, status, sort, limit, offset = values.split("|")
-    if status == "all":
-        status = None
 
     api_url = f"https://api.myanimelist.net/v2/users/{user}/animelist"
     headers = {
@@ -188,21 +184,16 @@ def get_user_anime_list(values):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 @tool
-def update_anime_list(values):
+def update_anime_list(id: int, status: str, score: int, is_rewatching: str, num_watched_episodes: int, num_times_rewatched: int) -> str:
     '''
-    Updates a user's anime list from MyAnimelist. Make sure the fields not asked to be updated remain the same. Current status can be found using the anime_details tool. Values should be given separated by a |. All values required.
-    anime_id
-    Status: watching, completed, on_hold, dropped, plan_to_watch
-    is_rewatching: True, False
-    score: integer 0-10
-    num_watched_episodes: integer number of episodes completed.
-    num_times_rewatched: integer number of times the entry has been rewatched
+    Updates a user's anime list from MyAnimelist. Make sure the fields not asked to be updated remain the same. Current status can be found using the anime_details tool.
+    status: watching, completed, on_hold, dropped, plan_to_watch
+    score: 0-10
+    is_rewatching: true or false. lowercase.
     '''
     load_dotenv(override=True)
 
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-
-    id, status, is_rewatching, score, num_watched_episodes, num_times_rewatched = values.split("|")
 
     api_url = f"https://api.myanimelist.net/v2/anime/{id}/my_list_status"
     headers = {
@@ -220,7 +211,7 @@ def update_anime_list(values):
     return json.dumps(requests.put(api_url, headers=headers, data=params).json())
 
 @tool
-def delete_anime_from_list(id):
+def delete_anime_from_list(id: int) -> str:
     '''
     Deletes an entry from the user's anime list. The only parameter is the anime id. The response will either be 200 or 404 indicating whether or not the item was on the list before deletion. 404 means it was never on the user's list.
     '''
@@ -511,4 +502,4 @@ def read_forum_topic(id):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 token_tools = [refresh_access_token]
-anime_tools = [search_anime, anime_details, ranked_anime, seasonal_anime]
+anime_tools = [search_anime, anime_details, ranked_anime, seasonal_anime, get_user_anime_list, update_anime_list, delete_anime_from_list]

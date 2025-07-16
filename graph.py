@@ -107,7 +107,9 @@ def anime(state: State) -> State:
 def summarize(state: State) -> State:
 
     instructions = f"""
-    Use the following message history in order to respond to the user's most recent message
+    Use the following message history in order to respond to either respond to the user's most recent message, or summarize what has happened.
+    The user cannot see the other messages. For example, if the user asks a question, answer as if the other agents aren't there, using their provided information as context.
+    If they perform an action, let the user know the status of the action.
 
     Message history:
     {state["messages"]}
