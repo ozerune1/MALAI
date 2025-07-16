@@ -501,5 +501,5 @@ def read_forum_topic(id):
 
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
-token_tools = [refresh_access_token]
+system_tools = [refresh_access_token, user_details]
 anime_tools = [search_anime, anime_details, ranked_anime, seasonal_anime, get_user_anime_list, update_anime_list, delete_anime_from_list]

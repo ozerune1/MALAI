@@ -11,7 +11,7 @@ from langchain_groq import ChatGroq
 from langchain_core.messages import ChatMessage
 from langchain_core.tools import tool
 
-from api import token_tools, anime_tools
+from api import system_tools, anime_tools
 '''
 llm = ChatGroq(
     model="moonshotai/kimi-k2-instruct"
@@ -32,7 +32,7 @@ class State(TypedDict):
 
 builder = StateGraph(State)
 
-token_tool_node = ToolNode(token_tools)
+token_tool_node = ToolNode(system_tools)
 anime_tool_node = ToolNode(anime_tools)
 
 def anime_wrapper(state: State) -> dict:
@@ -51,11 +51,11 @@ def token_wrapper(state: State) -> dict:
 
 def router(state: State) -> State:
 
-    llm_tool = llm.bind_tools(token_tools)
+    llm_tool = llm.bind_tools(system_tools)
 
     instructions = f"""
 You are a specialized router agent. Your first priority is to determine if a tool is required.
-A tool call should only be used when asked by an expert. Under no other circumstances should you try to use a tool.
+A tool call should only be used when asked by an expert, or asked about account information other than lists. Under no other circumstances should you try to use a tool.
 
 When performing a tool call, do not say anything.
 
@@ -123,7 +123,7 @@ def route_experts(state: State) -> str:
     destination = state["messages"][-1]
 
     if destination.tool_calls:
-        return "RefreshToken"
+        return "SystemTools"
     elif "Anime" in destination.content:
         return "Anime"
     elif "Summarize" in destination.content:
@@ -146,7 +146,7 @@ builder.add_node("Router", router)
 builder.add_node("Anime", anime)
 builder.add_node("Summarize", summarize)
 
-builder.add_node("RefreshToken", token_wrapper)
+builder.add_node("SystemTools", token_wrapper)
 builder.add_node("AnimeTools", anime_wrapper)
 
 builder.add_node("Update", expert_to_messages)
@@ -158,11 +158,11 @@ builder.add_conditional_edges(
     {
         "Anime": "Anime",
         "Summarize": "Summarize",
-        "RefreshToken": "RefreshToken",
+        "SystemTools": "SystemTools",
         "Router": "Router"
     }
 )
-builder.add_edge("RefreshToken", "Router")
+builder.add_edge("SystemTools", "Router")
 builder.add_conditional_edges(
     "Anime",
     route_anime,
