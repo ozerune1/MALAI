@@ -13,9 +13,9 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 @tool
-def refresh_access_token(a="None"):
+def refresh_access_token(a: str) -> str:
     '''
-    Refreshes the access token for MyAnimeList. Use this if you get a 401 error when using the API, then retry the previous API call. The Action Input should be the word None.
+    Refreshes the access token for MyAnimeList. Use this if you get an invalid token error when using the API, then retry the previous API call.
     '''
     load_dotenv(override=True)
 
@@ -43,10 +43,10 @@ def refresh_access_token(a="None"):
         update_secret("ACCESS_TOKEN", response['access_token'])
         update_secret("REFRESH_TOKEN", response['refresh_token'])
 
-    return "Success!"
+    return "Successfully refreshed the access token"
 
 @tool
-def search_anime(anime_name):
+def search_anime(anime_name: str) -> str:
     '''
     Takes a string and searches MyAnimeList for the anime. 
     The result will be a JSON table of titles and IDs. 
@@ -513,3 +513,6 @@ def read_forum_topic(id):
     }
 
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
+
+token_tools = [refresh_access_token]
+anime_tools = [search_anime]
