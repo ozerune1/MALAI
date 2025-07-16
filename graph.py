@@ -12,12 +12,12 @@ from langchain_core.messages import ChatMessage
 from langchain_core.tools import tool
 
 from api import token_tools, anime_tools
-
+'''
 llm = ChatGroq(
     model="moonshotai/kimi-k2-instruct"
 )
-
 '''
+
 llm = AzureChatOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_key=os.getenv("AZURE_OPENAI_KEY"),
@@ -25,7 +25,7 @@ llm = AzureChatOpenAI(
     api_version="2024-02-01",
     temperature=0
 )
-'''
+
 class State(TypedDict):
     messages: Annotated[list, add_messages]
     expert: Annotated[list, add_messages]

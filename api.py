@@ -128,21 +128,19 @@ def ranked_anime(limit: int, offset: int, field: str):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 @tool
-def seasonal_anime(values):
+def seasonal_anime(year: int, season: str, sort: str, limit: int, offset: int):
     '''
-    Gets seasonal anime from MyAnimelist. Values should be given separated by a |. All values required.
-    Year in integer form
-    Season: winter, spring, summer, or fall
-    Sort type: anime_score or anime_num_list_users
-    Limit: integer representing the number of anime to return. Keep as low as possible.
-    Offset: integer representing the number away from the top. 0 will be the top rated or top users.
+    Gets seasonal anime from MyAnimelist.
+    year: example: 2025
+    season: winter, spring, summer, or fall
+    sort: anime_score or anime_num_list_users
+    limit: number of anime to return. Keep as low as possible.
+    offset: number away from the top. 0 will be the top rated or top users.
     '''
 
     load_dotenv(override=True)
 
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-
-    year, season, sort, limit, offset = values.split('|')
 
     api_url = f"https://api.myanimelist.net/v2/anime/season/{year}/{season}"
     headers = {
@@ -246,7 +244,7 @@ def delete_anime_from_list(id):
 def user_details(fields):
     '''
     Returns information about the user, as well as statistics such as counts of certain lists. The id should always be @me. It is not possible to get this information about other users.
-    fields should be a comma separated list with no strings. Valid fields are: id, name, picture, gender, birthday, location, joined_at, anime_statistics, time_zone, is_supporter
+    fields should be a comma separated list with no spaces. Valid fields are: id, name, picture, gender, birthday, location, joined_at, anime_statistics, time_zone, is_supporter
     '''
 
     load_dotenv(override=True)
@@ -513,4 +511,4 @@ def read_forum_topic(id):
     return json.dumps(requests.get(api_url, headers=headers, params=params).json())
 
 token_tools = [refresh_access_token]
-anime_tools = [search_anime, anime_details, ranked_anime]
+anime_tools = [search_anime, anime_details, ranked_anime, seasonal_anime]
