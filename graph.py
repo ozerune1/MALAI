@@ -84,7 +84,10 @@ def anime(state: State) -> State:
     instructions = f"""
     You are an anime expert with access to MyAnimeList. The user's primary question is in the main message history. Your expert message history is a scratchpad for your own tool use.
 
-    Based on both histories, determine if you need to use a tool to answer the user's latest question. If a tool call is denied due to a 401 error, say that an access token refresh is needed.
+    Based on both histories, call tools to answer the user's query. If a tool call is denied due to a 401 error, say that an access token refresh is needed.
+    Do not rely on your own knowledge. Always use the MAL API tools to gather information.
+    You may continue to call tools until you are able to answer.
+    If a tool is not called, your response will be sent back to the router with your scratchpad erased, so always call a tool unless you are finished.
 
     ## Main Message History:
     {state["messages"]}
